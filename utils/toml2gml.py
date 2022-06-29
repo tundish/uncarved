@@ -1,6 +1,7 @@
 import argparse
 import enum
 import pathlib
+import re
 import sys
 from textwrap import dedent
 import unittest
@@ -21,7 +22,7 @@ class Model:
     @classmethod
     def loads(cls, text):
         data = toml.loads(text)
-        return cls(data)
+        return cls(text, data)
 
     @staticmethod
     def is_arc(table):
@@ -31,8 +32,10 @@ class Model:
             for i in (Aliases.source, Aliases.target)
         )
 
-    def __init__(self, data):
+    def __init__(self, text, data):
+        self.text = text
         self.data = data
+        self.table_finder = re.compile("\[\s*([\.\w]+)\s*\]")
 
     @property
     def graphs(self):
@@ -49,6 +52,10 @@ class Model:
                 yield from self.walk(node=v, parent=node)
             else:
                 yield parent, k, v
+
+    @property
+    def tables(self):
+        return self.table_finder.findall(self.text)
 
     def table(self, path):
         keys = path.split(".")
@@ -67,6 +74,19 @@ class Model:
 
 
 class TestLoad(unittest.TestCase):
+
+    def test_tables(self):
+        text = """
+        [A]
+        tag = 1
+
+        [A.B.C]
+        tag = 1
+
+        [  D ]
+        """
+        model = Model.loads(text)
+        self.assertEqual(["A", "A.B.C", "D"], model.tables)
 
     def test_get(self):
         text = """
@@ -129,7 +149,7 @@ def main(args):
             text = args.input.read_text()
 
     model = Model.loads(text)
-    print(model.data)
+    print(model.tables)
 
 
 def parser():
