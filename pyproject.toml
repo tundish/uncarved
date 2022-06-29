@@ -1,0 +1,31 @@
+# For possible options see https://peps.python.org/pep-0621/
+ 
+# This project includes a custom builder which accepts configuration options, eg:
+# python -m build -C all -C bar=baz -C--foo=fab
+
+[project]
+name = "documents_ecnclosed"
+version = "0.2.0"
+description = "Digital assets for a vlog."
+readme = "README.rst"
+requires-python = ">=3.8"
+license = {file = "COPYRIGHT"}
+keywords = []
+authors = [
+    {name = "Tundish", email = "tundish@gigeconomy.org.uk"}
+]
+maintainers = [
+    {name = "Tundish", email = "tundish@gigeconomy.org.uk"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python"
+]
+dependencies = [
+    "toml>=0.10.2",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "backend"
+backend-path = ["tools"]
