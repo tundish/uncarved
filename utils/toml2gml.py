@@ -64,18 +64,22 @@ class Model:
             data = data[k]
         return data
 
-    def to_dot(self):
-        print(self.data)
-        arcs = []
-        for name in self.tables:
-            parent = name.split(".")[-1]
+    def arcs(self):
+        links = [
+            (".".join(name.split(".")[:-1]), name)
+            for name in self.tables if "." in name
+        ]
+        for parent, name in links:
             p = self.table(parent)
             t = self.table(name)
             if parent != name:
                 if self.is_arc(t):
                     pass
                 else:
-                    arcs.append(f"{p.labels[0]} -> {t.labels[0]}")
+                    yield p.get("label", parent), t.get("label", name)
+
+    def to_dot(self):
+        arcs = [f"{parent} -> {node}" for parent, node in self.arcs()]
 
         a = "\n".join(arcs)
         return dedent(f"""
@@ -175,7 +179,6 @@ def main(args):
             text = args.input.read_text()
 
     model = Model.loads(text)
-    print(model.tables)
     print(model.to_dot())
 
 
