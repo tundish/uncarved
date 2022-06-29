@@ -1,8 +1,19 @@
 import argparse
+import enum
+import pathlib
 import sys
+from textwrap import dedent
 import unittest
 
 import toml
+
+class Aliases(enum.Enum):
+
+    graphs = ["graphs"]
+    labels = ["labels"]
+    source = ["source"]
+    target = ["target"]
+    weight = ["weight"]
 
 
 class Model:
@@ -12,6 +23,14 @@ class Model:
         data = toml.loads(text)
         return cls(data)
 
+    @staticmethod
+    def is_arc(table):
+        return any(
+            k in i.value
+            for k in table
+            for i in (Aliases.source, Aliases.target)
+        )
+
     def __init__(self, data):
         self.data = data
 
@@ -20,7 +39,7 @@ class Model:
         return {
             i for table, k, v in self.walk()
             for i in (v if isinstance(v, list) else [v])
-            if k == "graphs"
+            if k in Aliases.graphs.value
         }
 
     def walk(self, node=None, parent=None):
@@ -31,8 +50,31 @@ class Model:
             else:
                 yield parent, k, v
 
+    def table(self, path):
+        keys = path.split(".")
+        data = self.data
+        for k in keys:
+            data = data[k]
+        return data
+
+    def to_dot(self):
+        a = 1
+        return dedent(f"""
+        strict digraph {{
+        {a}
+        }}
+        """)
+
 
 class TestLoad(unittest.TestCase):
+
+    def test_get(self):
+        text = """
+        [A.B.C]
+        tag = 1
+        """
+        model = Model.loads(text)
+        self.assertEqual({"tag": 1}, model.table("A.B.C"))
 
     def test_graphs_unique(self):
         text = """
@@ -44,6 +86,9 @@ class TestLoad(unittest.TestCase):
         """
         model = Model.loads(text)
         self.assertEqual({"a", "b"}, model.graphs)
+        for i in ("A", "B", "C"):
+            with self.subTest(i=i):
+                self.assertFalse(model.is_arc(model.data[i]))
 
     def test_graphs_sublevels(self):
         text = """
@@ -63,13 +108,40 @@ class TestLoad(unittest.TestCase):
         model = Model.loads(text)
         self.assertIsInstance(model, Model)
 
+    def test_dumps(self):
+        text = """
+        [A]
+        [B]
+        """
+        model = Model.loads(text)
+        self.assertIsInstance(model, Model)
+
 
 def main(args):
-    unittest.main()
+    if args.test:
+        suite = unittest.defaultTestLoader.loadTestsFromName("__main__")
+        unittest.TextTestRunner().run(suite)
+        return 0
+    else:
+        if not args.input:
+            text = sys.stdin.read()
+        else:
+            text = args.input.read_text()
+
+    model = Model.loads(text)
+    print(model.data)
 
 
 def parser():
     rv = argparse.ArgumentParser(__doc__)
+    rv.add_argument(
+        "--test", default=False, action="store_true",
+        help="Run unit tests."
+    )
+    rv.add_argument(
+        "input", nargs="?", type=pathlib.Path,
+        help="Set input file."
+    )
     return rv
 
 
