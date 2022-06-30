@@ -86,8 +86,9 @@ class Model:
     @functools.cache
     def nodes(self):
         rv = {}
+        fields = {i.name for i in dataclasses.fields(Node)}
         for name, table in self.tables.items():
-            node = Node(name, table)
+            node = Node(name, **{k: v for k, v in table.items() if k in fields})
             node.data = table
             if "." in name:
                 paths = name.split(".")
@@ -221,6 +222,7 @@ class TestNode(unittest.TestCase):
         """
         model = Model.loads(text)
         self.assertEqual(2, len(model.nodes))
+        self.assertEqual("A", model.nodes["A"].label)
         self.assertTrue(all(i.parent is None for i in model.nodes.values()))
         self.assertTrue(all(isinstance(i.data, dict) for i in model.nodes.values()))
 
@@ -233,6 +235,7 @@ class TestNode(unittest.TestCase):
         """
         model = Model.loads(text)
         self.assertEqual(4, len(model.nodes))
+        self.assertEqual("A", model.nodes["A"].label)
         self.assertEqual("A", model.nodes["A.B"].parent)
         self.assertEqual("C", model.nodes["C.B"].parent)
 
@@ -247,6 +250,7 @@ class TestNode(unittest.TestCase):
         self.assertEqual(4, len(model.nodes))
         self.assertEqual("A", model.nodes["A.B.C"].parent)
         self.assertEqual("C", model.nodes["C.B.C"].parent)
+
 
 def main(args):
     if args.test:
