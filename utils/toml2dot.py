@@ -1,6 +1,7 @@
 import argparse
 from collections import namedtuple
 import dataclasses
+import functools
 import pathlib
 import re
 import sys
@@ -70,15 +71,16 @@ class Model:
                 yield parent, k, v
 
     @property
+    @functools.cache
     def tables(self):
-        return self.table_finder.findall(self.text)
-
-    def table(self, path):
-        keys = path.split(".")
-        data = self.data
-        for k in keys:
-            data = data[k]
-        return data
+        rv = {}
+        for path in self.table_finder.findall(self.text):
+            keys = path.split(".")
+            data = self.data
+            for k in keys:
+                data = data[k]
+            rv[path] = data
+        return rv
 
     def arcs(self):
         links = [
@@ -118,7 +120,7 @@ class TestLoad(unittest.TestCase):
         [  D ]
         """
         model = Model.loads(text)
-        self.assertEqual(["A", "A.B.C", "D"], model.tables)
+        self.assertEqual(["A", "A.B.C", "D"], list(model.tables.keys()))
 
     def test_table(self):
         text = """
@@ -131,8 +133,8 @@ class TestLoad(unittest.TestCase):
         [  D ]
         """
         model = Model.loads(text)
-        self.assertEqual(1, model.table("A").get("tag"))
-        self.assertEqual({"tag": 2}, model.table("A.B.C"))
+        self.assertEqual(1, model.tables["A"].get("tag"))
+        self.assertEqual({"tag": 2}, model.tables["A.B.C"])
 
     def test_get(self):
         text = """
@@ -140,7 +142,7 @@ class TestLoad(unittest.TestCase):
         tag = 1
         """
         model = Model.loads(text)
-        self.assertEqual({"tag": 1}, model.table("A.B.C"))
+        self.assertEqual({"tag": 1}, model.tables["A.B.C"])
 
     def test_graphs_unique(self):
         text = """
