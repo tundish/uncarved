@@ -161,13 +161,19 @@ class Model:
                 else:
                     yield p.get("label", parent), t.get("label", name)
 
-    def to_dot(self, label=None, directed=True):
-        yield "strict digraph {"
+    def to_dot(self, name="model", label="model", directed=True, strict=True):
+        yield f"{'strict ' if strict else ''}{'digraph' if directed else 'graph'} {name} {{"
+        yield f'    label="{label}"'
         for node in self.subgraphs():
             if node is None:
                 yield "}"
             elif self.children(node.name):
-                yield f"subgraph {node.name} {{"
+                node_name = node.name.lower()
+                yield ""
+                yield f"subgraph cluster_{node_name} {{"
+                yield f'    label="{node.label}"'
+                yield f"    weight={node.weight:.2f}"
+                yield ""
             else:
                 yield from node.to_dot()
         yield "}"
@@ -332,7 +338,6 @@ class TestNode(unittest.TestCase):
         [A.B.C]
         """
         model = Model.loads(text)
-        print(list(model.nodes["A"].to_dot()))
         self.assertEqual(4, len(model.nodes))
         self.assertEqual("C", model.nodes["C.B.C"].parent)
 
@@ -349,7 +354,7 @@ def main(args):
             text = args.input.read_text()
 
     model = Model.loads(text)
-    print("\n".join(model.to_dot()))
+    print("\n".join(model.to_dot(name="", directed=False, strict=False)))
 
 
 def parser():

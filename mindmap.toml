@@ -4,5 +4,7 @@ graph = true
 [Performance.Vlog]
 [Performance.Jam]
 
+[Technology]
+[Technology.Synths]
 [Technology.Synths.performance]
 target = "Performance.Jam"
