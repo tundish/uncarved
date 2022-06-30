@@ -18,8 +18,8 @@ dot -Tsvg mindmap.dot > mindmap.svg
 
 Arc = namedtuple(
     "Arc",
-    ["source", "target", "label", "weight"],
-    defaults=(1, )
+    ["label", "node", "target", "source", "weight"],
+    defaults=(None, 1.0)
 )
 
 
@@ -103,6 +103,28 @@ class Model:
                         node.parent = last
 
             rv[name] = node
+
+        for name, table in arcs.items():
+            parent, dot, label = name.rpartition(".")
+            arc = Arc(
+                table.get("label", label),
+                node=parent or None,
+                target=table.get("target"),
+                weight=table.get("weight", 1.0)
+            )
+            try:
+                rv[parent].arcs.append(arc)
+            except AttributeError:
+                print(
+                    "Arc '", name, "' expects a Node for '", parent, "'.",
+                    file=sys.stderr
+                )
+            except KeyError:
+                print(
+                    "No node '", parent, "' for arc '", name, "'.",
+                    file=sys.stderr
+                )
+
         return rv
 
 
@@ -268,7 +290,7 @@ class TestNode(unittest.TestCase):
         model = Model.loads(text)
         self.assertEqual(2, len(model.nodes))
         self.assertEqual(1, len(model.nodes["A.B"].arcs))
-        self.assertEqual(1, len(model.nodes["C.B"].arcs))
+        self.assertEqual(1, len(model.nodes["C"].arcs))
 
 
 def main(args):
