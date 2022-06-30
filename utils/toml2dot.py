@@ -1,5 +1,6 @@
 import argparse
-import enum
+from collections import namedtuple
+import dataclasses
 import pathlib
 import re
 import sys
@@ -8,13 +9,20 @@ import unittest
 
 import toml
 
-class Aliases(enum.Enum):
 
-    graphs = ["graphs"]
-    labels = ["labels"]
-    source = ["source"]
-    target = ["target"]
-    weight = ["weight"]
+Arc = namedtuple(
+    "Arc",
+    ["source", "target", "label", "weight"],
+    defaults=(1, )
+)
+
+
+@dataclasses.dataclass
+class Node:
+
+    label: str
+    weight: float = 1.0
+    arcs: list[Arc] = dataclasses.field(default_factory=list)
 
 
 class Model:
@@ -26,11 +34,7 @@ class Model:
 
     @staticmethod
     def is_arc(table):
-        return any(
-            k in i.value
-            for k in table
-            for i in (Aliases.source, Aliases.target)
-        )
+        return set(table.keys()).intersection({"source", "target"})
 
     def __init__(self, text, data):
         self.text = text
@@ -42,7 +46,7 @@ class Model:
         return {
             i for table, k, v in self.walk()
             for i in (v if isinstance(v, list) else [v])
-            if k in Aliases.graphs.value
+            if k == "graphs"
         }
 
     def walk(self, node=None, parent=None):
@@ -78,7 +82,7 @@ class Model:
                 else:
                     yield p.get("label", parent), t.get("label", name)
 
-    def to_dot(self):
+    def to_dot(self, directed=True):
         arcs = [f"{parent} -> {node}" for parent, node in self.arcs()]
 
         a = "\n".join(arcs)
@@ -165,6 +169,16 @@ class TestLoad(unittest.TestCase):
         """
         model = Model.loads(text)
         self.assertIsInstance(model, Model)
+
+
+class TestNode(unittest.TestCase):
+
+    def test_node_defaults(self):
+        self.assertRaises(TypeError, Node)
+        node = Node(label="test node")
+        self.assertEqual(1, node.weight)
+        self.assertIsInstance(node.weight, float)
+        self.assertEqual([], node.arcs)
 
 
 def main(args):

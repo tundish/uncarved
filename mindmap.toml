@@ -1,4 +1,6 @@
 [Performance]
+graph = true
+
 [Performance.Vlog]
 [Performance.Jam]
 
