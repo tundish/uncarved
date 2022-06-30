@@ -25,9 +25,16 @@ Arc = namedtuple(
 @dataclasses.dataclass
 class Node:
 
-    label: str
+    name: str
+
+    label: str = None
     weight: float = 1.0
     arcs: list[Arc] = dataclasses.field(default_factory=list)
+    data: dict = None
+    parent: object = None
+
+    def __post_init__(self):
+        self.label = self.label or self.name
 
 
 class Model:
@@ -180,7 +187,8 @@ class TestNode(unittest.TestCase):
 
     def test_node_defaults(self):
         self.assertRaises(TypeError, Node)
-        node = Node(label="test node")
+        node = Node(name="test node")
+        self.assertEqual("test node", node.label)
         self.assertEqual(1, node.weight)
         self.assertIsInstance(node.weight, float)
         self.assertEqual([], node.arcs)
