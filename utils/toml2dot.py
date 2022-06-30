@@ -9,6 +9,11 @@ import unittest
 
 import toml
 
+"""
+python -m utils.toml2dot mindmap.toml > mindmap.dot
+dot -Tsvg mindmap.dot > mindmap.svg
+
+"""
 
 Arc = namedtuple(
     "Arc",
