@@ -37,6 +37,10 @@ class Node:
     def __post_init__(self):
         self.label = self.label or self.name
 
+    def to_dot(self):
+        hash_ = hash(self)
+        yield f'{hash_} [label="{self.label}", weight={self.weight:.02f}]'
+
 
 class Model:
 
@@ -117,16 +121,31 @@ class Model:
             except AttributeError:
                 print(
                     "Arc '", name, "' expects a Node for '", parent, "'.",
-                    file=sys.stderr
+                    sep="", file=sys.stderr
                 )
             except KeyError:
                 print(
-                    "No node '", parent, "' for arc '", name, "'.",
-                    file=sys.stderr
+                    "No Node '", parent, "' for Arc '", name, "'.",
+                    sep="", file=sys.stderr
                 )
 
         return rv
 
+    @functools.cache
+    def children(self, name):
+        return [
+            k for k, v in self.nodes.items()
+            if k != name and k.startswith(name)
+        ]
+
+    def subgraphs(self, parents=None):
+        parents = parents or [v for v in self.nodes.values() if not v.parent]
+        for p in parents:
+            yield p
+            children = [self.nodes[c] for c in self.children(p.name)]
+            if children:
+                yield from self.subgraphs(children)
+                yield None
 
     def arcs(self):
         links = [
@@ -142,15 +161,16 @@ class Model:
                 else:
                     yield p.get("label", parent), t.get("label", name)
 
-    def to_dot(self, directed=True):
-        arcs = [f"{parent} -> {node}" for parent, node in self.arcs()]
-
-        a = "\n".join(arcs)
-        return dedent(f"""
-        strict digraph {{
-        {a}
-        }}
-        """)
+    def to_dot(self, label=None, directed=True):
+        yield "strict digraph {"
+        for node in self.subgraphs():
+            if node is None:
+                yield "}"
+            elif self.children(node.name):
+                yield f"subgraph {node.name} {{"
+            else:
+                yield from node.to_dot()
+        yield "}"
 
 
 class TestLoad(unittest.TestCase):
@@ -278,6 +298,18 @@ class TestNode(unittest.TestCase):
         self.assertEqual("A", model.nodes["A.B.C"].parent)
         self.assertEqual("C", model.nodes["C.B.C"].parent)
 
+    def test_node_children(self):
+        text = """
+        [A]
+        [C.B.C]
+        [C]
+        [A.B.C]
+        """
+        model = Model.loads(text)
+        self.assertEqual(4, len(model.nodes))
+        self.assertEqual(["A.B.C"], model.children("A"))
+        self.assertEqual("C", model.nodes["C.B.C"].parent)
+
     def test_arc_labels(self):
         text = """
         [A.B]
@@ -292,6 +324,18 @@ class TestNode(unittest.TestCase):
         self.assertEqual(1, len(model.nodes["A.B"].arcs))
         self.assertEqual(1, len(model.nodes["C"].arcs))
 
+    def test_node_to_dot(self):
+        text = """
+        [A]
+        [C.B.C]
+        [C]
+        [A.B.C]
+        """
+        model = Model.loads(text)
+        print(list(model.nodes["A"].to_dot()))
+        self.assertEqual(4, len(model.nodes))
+        self.assertEqual("C", model.nodes["C.B.C"].parent)
+
 
 def main(args):
     if args.test:
@@ -305,7 +349,7 @@ def main(args):
             text = args.input.read_text()
 
     model = Model.loads(text)
-    print(model.to_dot())
+    print("\n".join(model.to_dot()))
 
 
 def parser():
