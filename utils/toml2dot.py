@@ -37,10 +37,6 @@ class Node:
     def __post_init__(self):
         self.label = self.label or self.name
 
-    def to_dot(self):
-        hash_ = hash(self)
-        yield f'{hash_} [label="{self.label}", weight={self.weight:.02f}]'
-
 
 class Model:
 
@@ -175,7 +171,10 @@ class Model:
                 yield f"    weight={node.weight:.2f}"
                 yield ""
             else:
-                yield from node.to_dot()
+                node_hash = hash(node)
+                yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
+                for arc in node.arcs:
+                    yield ""
         yield "}"
 
 
