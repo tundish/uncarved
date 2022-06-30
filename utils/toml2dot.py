@@ -22,7 +22,7 @@ Arc = namedtuple(
 )
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(eq=False)
 class Node:
 
     name: str
@@ -192,6 +192,7 @@ class TestNode(unittest.TestCase):
         self.assertEqual(1, node.weight)
         self.assertIsInstance(node.weight, float)
         self.assertEqual([], node.arcs)
+        self.assertTrue(hash(node))
 
 
 def main(args):
