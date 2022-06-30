@@ -62,11 +62,11 @@ class Model:
             if k == "graphs"
         }
 
-    def walk(self, node=None, parent=None):
-        node = node or self.data
+    def walk(self, data=None, parent=None):
+        data = data or self.data
         for k, v in node.items():
             if v and isinstance(v, dict):
-                yield from self.walk(node=v, parent=node)
+                yield from self.walk(data=v, parent=data)
             else:
                 yield parent, k, v
 
