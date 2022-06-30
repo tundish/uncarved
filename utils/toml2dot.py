@@ -86,8 +86,13 @@ class Model:
     @functools.cache
     def nodes(self):
         rv = {}
+        arcs = {}
         fields = {i.name for i in dataclasses.fields(Node)}
         for name, table in self.tables.items():
+            if self.is_arc(table):
+                arcs[name] = table
+                continue
+
             node = Node(name, **{k: v for k, v in table.items() if k in fields})
             node.data = table
             if "." in name:
@@ -250,6 +255,20 @@ class TestNode(unittest.TestCase):
         self.assertEqual(4, len(model.nodes))
         self.assertEqual("A", model.nodes["A.B.C"].parent)
         self.assertEqual("C", model.nodes["C.B.C"].parent)
+
+    def test_arc_labels(self):
+        text = """
+        [A.B]
+        [A.B.c]
+        target = "C"
+        [C]
+        [C.ab]
+        target = "A.B"
+        """
+        model = Model.loads(text)
+        self.assertEqual(2, len(model.nodes))
+        self.assertEqual(1, len(model.nodes["A.B"].arcs))
+        self.assertEqual(1, len(model.nodes["C.B"].arcs))
 
 
 def main(args):
