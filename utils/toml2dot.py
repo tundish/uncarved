@@ -64,7 +64,7 @@ class Model:
 
     def walk(self, data=None, parent=None):
         data = data or self.data
-        for k, v in node.items():
+        for k, v in data.items():
             if v and isinstance(v, dict):
                 yield from self.walk(data=v, parent=data)
             else:
@@ -81,6 +81,24 @@ class Model:
                 data = data[k]
             rv[path] = data
         return rv
+
+    @property
+    @functools.cache
+    def nodes(self):
+        rv = {}
+        for name, table in self.tables.items():
+            node = Node(name, table)
+            node.data = table
+            if "." in name:
+                paths = name.split(".")
+                for gen in range(1, len(paths)):
+                    last = ".".join(paths[:-gen])
+                    if last in self.tables:
+                        node.parent = last
+
+            rv[name] = node
+        return rv
+
 
     def arcs(self):
         links = [
@@ -196,6 +214,39 @@ class TestNode(unittest.TestCase):
         self.assertEqual([], node.arcs)
         self.assertTrue(hash(node))
 
+    def test_node_parent_root(self):
+        text = """
+        [A]
+        [B]
+        """
+        model = Model.loads(text)
+        self.assertEqual(2, len(model.nodes))
+        self.assertTrue(all(i.parent is None for i in model.nodes.values()))
+        self.assertTrue(all(isinstance(i.data, dict) for i in model.nodes.values()))
+
+    def test_node_parent_tree(self):
+        text = """
+        [A]
+        [A.B]
+        [C]
+        [C.B]
+        """
+        model = Model.loads(text)
+        self.assertEqual(4, len(model.nodes))
+        self.assertEqual("A", model.nodes["A.B"].parent)
+        self.assertEqual("C", model.nodes["C.B"].parent)
+
+    def test_node_parent_gap(self):
+        text = """
+        [A]
+        [C.B.C]
+        [C]
+        [A.B.C]
+        """
+        model = Model.loads(text)
+        self.assertEqual(4, len(model.nodes))
+        self.assertEqual("A", model.nodes["A.B.C"].parent)
+        self.assertEqual("C", model.nodes["C.B.C"].parent)
 
 def main(args):
     if args.test:
