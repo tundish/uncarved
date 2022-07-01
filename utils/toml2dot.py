@@ -157,7 +157,8 @@ class Model:
                 else:
                     yield p.get("label", parent), t.get("label", name)
 
-    def to_dot(self, name="model", label="model", directed=True, strict=True):
+    def to_dot(self, name="model", label=None, directed=True, strict=True):
+        label = label or name
         yield f"{'strict ' if strict else ''}{'digraph' if directed else 'graph'} {name} {{"
         yield f'    label="{label}"'
         for node in self.subgraphs():
@@ -356,15 +357,26 @@ def main(args):
     else:
         if not args.input:
             text = sys.stdin.read()
+            name = ""
         else:
             text = args.input.read_text()
+            name = args.input.stem
 
     model = Model.loads(text)
-    print("\n".join(model.to_dot(name="", directed=False, strict=False)))
+    writer = model.to_dot(name=name, label=args.label, directed=args.directed)
+    print("\n".join(writer), file=sys.stdout)
 
 
 def parser():
     rv = argparse.ArgumentParser(__doc__)
+    rv.add_argument(
+        "--label", default=None,
+        help="Set a label for the graph."
+    )
+    rv.add_argument(
+        "--directed", default=False, action="store_true",
+        help="Make arcs directional."
+    )
     rv.add_argument(
         "--test", default=False, action="store_true",
         help="Run unit tests."
