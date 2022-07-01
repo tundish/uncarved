@@ -162,6 +162,7 @@ class Model:
         yield f'    label="{label}"'
         for node in self.subgraphs():
             if node is None:
+                yield ""
                 yield "}"
             elif self.children(node.name):
                 node_name = node.name.lower()
@@ -173,8 +174,14 @@ class Model:
             else:
                 node_hash = hash(node)
                 yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
+                arc_style = "->" if directed else "--"
                 for arc in node.arcs:
-                    yield ""
+                    target_hash = hash(self.nodes[arc.target])
+                    yield (
+                        f"{node_hash} {arc_style} {target_hash}"
+                        f' [label="{arc.label}", weight={arc.weight:.02f}]'
+                    )
+        yield ""
         yield "}"
 
 
