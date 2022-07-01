@@ -1,5 +1,8 @@
 [Mythology]
 [Mythology.Class]
+[Mythology.Class.politics]
+target = "Performance.Theatre"
+
 [Mythology.Culture]
 [Mythology.Culture.music]
 target = "Performance.Broadcast"
@@ -7,9 +10,15 @@ target = "Performance.Broadcast"
 [Performance]
 [Performance.Vlog]
 [Performance.Jam]
+[Performance.Jam.stream]
+target = "Technology.Network"
 [Performance.Broadcast]
+[Performance.Broadcast.stream]
+target = "Technology.Network"
+[Performance.Theatre]
 
 [Technology]
-[Technology.Synths]
-[Technology.Synths.performance]
+[Technology.Network]
+[Technology.Synth]
+[Technology.Synth.performance]
 target = "Performance.Jam"
