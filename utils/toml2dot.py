@@ -159,6 +159,8 @@ class Model:
 
     def to_dot(self, name="model", label=None, directed=True, strict=True):
         label = label or name
+        arc_style = "->" if directed else "--"
+
         yield f"{'strict ' if strict else ''}{'digraph' if directed else 'graph'} {name} {{"
         yield f'    label="{label}"'
         for node in self.subgraphs():
@@ -175,13 +177,17 @@ class Model:
             else:
                 node_hash = hash(node)
                 yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
-                arc_style = "->" if directed else "--"
-                for arc in node.arcs:
-                    target_hash = hash(self.nodes[arc.target])
-                    yield (
-                        f"{node_hash} {arc_style} {target_hash}"
-                        f' [label="{arc.label}", weight={arc.weight:.02f}]'
-                    )
+
+        yield ""
+
+        for node in self.nodes.values():
+            node_hash = hash(node)
+            for arc in node.arcs:
+                target_hash = hash(self.nodes[arc.target])
+                yield (
+                    f"{node_hash} {arc_style} {target_hash}"
+                    f' [label="{arc.label}", weight={arc.weight:.02f}]'
+                )
         yield ""
         yield "}"
 

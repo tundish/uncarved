@@ -1,0 +1,15 @@
+[Mythology]
+[Mythology.Class]
+[Mythology.Culture]
+[Mythology.Culture.music]
+target = "Performance.Broadcast"
+
+[Performance]
+[Performance.Vlog]
+[Performance.Jam]
+[Performance.Broadcast]
+
+[Technology]
+[Technology.Synths]
+[Technology.Synths.performance]
+target = "Performance.Jam"
