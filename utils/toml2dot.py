@@ -196,7 +196,6 @@ class Model:
         arc_style = "->" if directed else "--"
 
         yield f"{'strict ' if strict else ''}{'digraph' if directed else 'graph'} {name} {{"
-        yield f'    label="{label}"'
         yield ""
 
         for node in self.nodes.values():
