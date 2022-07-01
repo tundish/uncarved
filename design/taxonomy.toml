@@ -20,5 +20,5 @@ target = "Technology.Network"
 [Technology]
 [Technology.Network]
 [Technology.Synth]
-[Technology.Synth.performance]
+[Technology.Synth.perform]
 target = "Performance.Jam"

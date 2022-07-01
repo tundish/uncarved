@@ -157,7 +157,7 @@ class Model:
                 else:
                     yield p.get("label", parent), t.get("label", name)
 
-    def to_dot(self, name="model", label=None, directed=True, strict=True):
+    def to_cluster(self, name="model", label=None, directed=True, strict=True):
         label = label or name
         arc_style = "->" if directed else "--"
 
@@ -188,6 +188,33 @@ class Model:
                     f"{node_hash} {arc_style} {target_hash}"
                     f' [label="{arc.label}", weight={arc.weight:.02f}]'
                 )
+        yield ""
+        yield "}"
+
+    def to_dot(self, name="model", label=None, directed=True, strict=True):
+        label = label or name
+        arc_style = "->" if directed else "--"
+
+        yield f"{'strict ' if strict else ''}{'digraph' if directed else 'graph'} {name} {{"
+        yield f'    label="{label}"'
+        yield ""
+
+        for node in self.nodes.values():
+            node_hash = hash(node)
+            yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
+            for child in [self.nodes[i] for i in self.children(node.name)]:
+                child_hash = hash(child)
+                yield f'{node_hash} {arc_style} {child_hash} [label="...", weight=1.00]'
+
+
+            for arc in node.arcs:
+                target_hash = hash(self.nodes[arc.target])
+                yield (
+                    f"{node_hash} {arc_style} {target_hash}"
+                    f' [label="{arc.label}", weight={arc.weight:.02f}]'
+                )
+            yield ""
+
         yield ""
         yield "}"
 
@@ -369,7 +396,10 @@ def main(args):
             name = args.input.stem
 
     model = Model.loads(text)
-    writer = model.to_dot(name=name, label=args.label, directed=args.directed)
+    if args.cluster:
+        writer = model.to_cluster(name=name, label=args.label, directed=args.directed)
+    else:
+        writer = model.to_dot(name=name, label=args.label, directed=args.directed)
     print("\n".join(writer), file=sys.stdout)
 
 
@@ -378,6 +408,10 @@ def parser():
     rv.add_argument(
         "--label", default=None,
         help="Set a label for the graph."
+    )
+    rv.add_argument(
+        "--cluster", default=False, action="store_true",
+        help="Generate a clustered graph."
     )
     rv.add_argument(
         "--directed", default=False, action="store_true",
