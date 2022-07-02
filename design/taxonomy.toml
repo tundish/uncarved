@@ -3,6 +3,8 @@
 target = "Capital"
 [Business.develops]
 target = "Technology"
+[Business.formulates]
+target = "Doctrine"
 [Business.schedules]
 target = "Event"
 [Business.promotes]
@@ -10,10 +12,15 @@ target = "Performer"
 
 [Capital]
 
+[Change]
+
+[Doctrine]
+[Doctrine.codifies]
+target = "Performance"
+
+[Gesture]
 
 [Event]
-[Event.delivers]
-target = "Performance"
 [Event.generates]
 target = "Capital"
 [Event.requires]
@@ -22,10 +29,13 @@ target = "Technology"
 [Event.Broadcast]
 
 [Instrument]
+# Instruments generate rhythm. Axes, Guns, Microwave ovens, Pianos
+
 [Instrument.embodies]
 target = "Technology"
 
 [Instrument.Synth]
+[Instrument.Text]
 [Instrument.Voice]
 
 [Mythology]
@@ -36,11 +46,19 @@ target = "Technology"
 [Participant]
 [Participant.witnesses]
 target = "Event"
+[Participant.undergoes]
+target = "Change"
 
 [Performance]
+# Performances span time
+
+[Performance.delivers]
+target = "Event"
 
 [Performance.Jam]
 [Performance.Recital]
+[Performance.Speech]
+# Speech Act
 [Performance.Theatre]
 
 [Performer]
