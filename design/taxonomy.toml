@@ -10,13 +10,15 @@ target = "Performer"
 [Business.promotes]
 target = "Doctrine"
 
+[Business.Corporation]
+[Business.Firm]
+[Business.Government]
+
 [Capital]
 [Capital.Cultural]
 [Capital.Monetary]
 [Capital.Political]
 [Capital.Social]
-
-[Change]
 
 [Doctrine]
 [Doctrine.informs]
@@ -28,6 +30,8 @@ target = "Performance"
 target = "Participant"
 [Gesture.head]
 target = "Performer"
+[Gesture.state]
+target = "State"
 [Gesture.Speech]
 
 [Event]
@@ -44,8 +48,6 @@ target = "Capital"
 [Instrument.Text]
 
 [Mythology]
-[Mythology.enshrines]
-target = "Doctrine"
 
 [Mythology.Character]
 [Mythology.Character.values]
@@ -65,8 +67,6 @@ target = "Capital.Cultural"
 target = "Mythology"
 [Participant.witnesses]
 target = "Event"
-[Participant.undergoes]
-target = "Change"
 
 [Participant.Heidegger]
 [Participant.Heidegger.experiences]
@@ -99,6 +99,8 @@ target = "Instrument"
 target = "Doctrine.Breakdown"
 [Performer.Heidegger.begins]
 target = "Performance.Thinking"
+
+[State]
 
 [Technology]
 [Technology.enables]
