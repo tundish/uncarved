@@ -3,51 +3,74 @@
 target = "Capital"
 [Business.develops]
 target = "Technology"
-[Business.formulates]
-target = "Doctrine"
 [Business.schedules]
 target = "Event"
-[Business.promotes]
+[Business.sponsors]
 target = "Performer"
+[Business.promotes]
+target = "Doctrine"
 
 [Capital]
+[Capital.Cultural]
+[Capital.Monetary]
+[Capital.Political]
+[Capital.Social]
 
 [Change]
 
 [Doctrine]
-[Doctrine.codifies]
+[Doctrine.informs]
 target = "Performance"
+[Doctrine.Breakdown]
 
 [Gesture]
+[Gesture.hand]
+target = "Participant"
+[Gesture.head]
+target = "Performer"
+[Gesture.Speech]
 
 [Event]
 [Event.generates]
 target = "Capital"
-[Event.requires]
-target = "Technology"
 
 [Event.Broadcast]
+[Event.Inspiration]
 
 [Instrument]
 # Instruments generate rhythm. Axes, Guns, Microwave ovens, Pianos
 
-[Instrument.embodies]
-target = "Technology"
-
 [Instrument.Synth]
 [Instrument.Text]
-[Instrument.Voice]
 
 [Mythology]
+[Mythology.enshrines]
+target = "Doctrine"
 
+[Mythology.Character]
+[Mythology.Character.values]
+target = "Capital.Social"
 [Mythology.Class]
-[Mythology.Culture]
+[Mythology.Class.values]
+target = "Capital.Political"
+[Mythology.Credit]
+[Mythology.Credit.values]
+target = "Capital.Monetary"
+[Mythology.Nation]
+[Mythology.Nation.values]
+target = "Capital.Cultural"
 
 [Participant]
+[Participant.internalises]
+target = "Mythology"
 [Participant.witnesses]
 target = "Event"
 [Participant.undergoes]
 target = "Change"
+
+[Participant.Heidegger]
+[Participant.Heidegger.experiences]
+target = "Event.Inspiration"
 
 [Performance]
 # Performances span time
@@ -55,21 +78,39 @@ target = "Change"
 [Performance.delivers]
 target = "Event"
 
-[Performance.Jam]
+[Performance.Reading]
 [Performance.Recital]
-[Performance.Speech]
-# Speech Act
-[Performance.Theatre]
+[Performance.Recital.performs]
+target = "Instrument.Text"
+[Performance.Thinking]
+[Performance.Writing]
+[Performance.Writing.arranges]
+target = "Instrument.Text"
 
 [Performer]
 [Performer.creates]
 target = "Performance"
+[Performer.formulates]
+target = "Doctrine"
 [Performer.practices]
 target = "Instrument"
+[Performer.Heidegger]
+[Performer.Heidegger.formulates]
+target = "Doctrine.Breakdown"
+[Performer.Heidegger.begins]
+target = "Performance.Thinking"
 
 [Technology]
+[Technology.enables]
+target = "Event"
+[Technology.implements]
+target = "Instrument"
+
 [Technology.Audio]
 [Technology.Computing]
 [Technology.Network]
+[Technology.Printing]
+[Technology.Printing.copies]
+target = "Instrument.Text"
 [Technology.Video]
 
