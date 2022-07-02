@@ -396,9 +396,9 @@ def main(args):
 
     model = Model.loads(text)
     if args.cluster:
-        writer = model.to_cluster(name=name, label=args.label, directed=args.directed)
+        writer = model.to_cluster(name=name, label=args.label, directed=args.digraph)
     else:
-        writer = model.to_dot(name=name, label=args.label, directed=args.directed)
+        writer = model.to_dot(name=name, label=args.label, directed=args.digraph)
     print("\n".join(writer), file=sys.stdout)
 
 
@@ -413,7 +413,7 @@ def parser():
         help="Generate a clustered graph."
     )
     rv.add_argument(
-        "--directed", default=False, action="store_true",
+        "--digraph", "--directed", default=False, action="store_true",
         help="Make arcs directional."
     )
     rv.add_argument(

@@ -1,24 +1,57 @@
-[Mythology]
-[Mythology.Class]
-[Mythology.Class.politics]
-target = "Performance.Theatre"
+[Business]
+[Business.accesses]
+target = "Capital"
+[Business.develops]
+target = "Technology"
+[Business.schedules]
+target = "Event"
+[Business.promotes]
+target = "Performer"
 
+[Capital]
+
+
+[Event]
+[Event.delivers]
+target = "Performance"
+[Event.generates]
+target = "Capital"
+[Event.requires]
+target = "Technology"
+
+[Event.Broadcast]
+
+[Instrument]
+[Instrument.embodies]
+target = "Technology"
+
+[Instrument.Synth]
+[Instrument.Voice]
+
+[Mythology]
+
+[Mythology.Class]
 [Mythology.Culture]
-[Mythology.Culture.music]
-target = "Performance.Broadcast"
+
+[Participant]
+[Participant.witnesses]
+target = "Event"
 
 [Performance]
-[Performance.Vlog]
+
 [Performance.Jam]
-[Performance.Jam.stream]
-target = "Technology.Network"
-[Performance.Broadcast]
-[Performance.Broadcast.stream]
-target = "Technology.Network"
+[Performance.Recital]
 [Performance.Theatre]
 
+[Performer]
+[Performer.creates]
+target = "Performance"
+[Performer.practices]
+target = "Instrument"
+
 [Technology]
+[Technology.Audio]
+[Technology.Computing]
 [Technology.Network]
-[Technology.Synth]
-[Technology.Synth.perform]
-target = "Performance.Jam"
+[Technology.Video]
+
