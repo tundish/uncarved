@@ -47,6 +47,7 @@ target = "Capital"
 
 [Instrument.Synth]
 [Instrument.Text]
+[Instrument.Text.Code]
 
 [Mythology]
 
