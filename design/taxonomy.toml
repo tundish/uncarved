@@ -15,6 +15,7 @@ target = "Doctrine"
 [Business.Government]
 
 [Capital]
+[Capital.Asset]
 [Capital.Cultural]
 [Capital.Monetary]
 [Capital.Political]
@@ -61,6 +62,9 @@ target = "Capital.Monetary"
 [Mythology.Nation]
 [Mythology.Nation.values]
 target = "Capital.Cultural"
+[Mythology.Ownership]
+[Mythology.Ownership.values]
+target = "Capital.Asset"
 
 [Participant]
 [Participant.internalises]
@@ -79,8 +83,10 @@ target = "Event.Inspiration"
 target = "Event"
 
 [Performance.Reading]
+[Performance.Reading.performs]
+target = "Instrument.Text"
 [Performance.Recital]
-[Performance.Recital.performs]
+[Performance.Recital.pronounces]
 target = "Instrument.Text"
 [Performance.Thinking]
 [Performance.Writing]
@@ -107,10 +113,20 @@ target = "Performance.Thinking"
 target = "Instrument"
 
 [Technology.Audio]
-[Technology.Computing]
+[Technology.Language]
+[Technology.Language.CSS]
+[Technology.Language.HTML]
+[Technology.Language.PDF]
+[Technology.Language.Python]
+[Technology.Language.RestructuredText]
+[Technology.Language.TOML]
 [Technology.Network]
 [Technology.Printing]
-[Technology.Printing.copies]
+[Technology.Printing.reifies]
 target = "Instrument.Text"
+[Technology.Web]
+[Technology.Web.distributes]
+target = "Instrument.Text"
+[Technology.OS.Linux]
 [Technology.Video]
 
