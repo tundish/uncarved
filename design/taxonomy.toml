@@ -1,17 +1,17 @@
 [Business]
-[Business.accesses]
+[Business.invokes]
 target = "Capital"
-[Business.develops]
+[Business.acquires]
 target = "Technology"
-[Business.schedules]
-target = "Event"
-[Business.sponsors]
+[Business.recruits]
 target = "Performer"
-[Business.promotes]
+[Business.adopts]
 target = "Doctrine"
 
+[Business.Church]
 [Business.Corporation]
-[Business.Firm]
+[Business.Family]
+[Business.Gang]
 [Business.Government]
 
 [Capital]
@@ -75,7 +75,7 @@ target = "Event.Inspiration"
 [Performance]
 # Performances span time
 
-[Performance.delivers]
+[Performance.creates]
 target = "Event"
 
 [Performance.Reading]
@@ -88,7 +88,7 @@ target = "Instrument.Text"
 target = "Instrument.Text"
 
 [Performer]
-[Performer.creates]
+[Performer.delivers]
 target = "Performance"
 [Performer.formulates]
 target = "Doctrine"
@@ -103,8 +103,6 @@ target = "Performance.Thinking"
 [State]
 
 [Technology]
-[Technology.enables]
-target = "Event"
 [Technology.implements]
 target = "Instrument"
 
