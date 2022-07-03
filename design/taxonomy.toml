@@ -1,11 +1,9 @@
 [Business]
 [Business.invokes]
 target = "Capital"
-[Business.adopts]
-target = "Technology"
 [Business.recruits]
 target = "Performer"
-[Business.promotes]
+[Business.adopts]
 target = "Doctrine"
 
 [Business.Church]
@@ -16,6 +14,7 @@ target = "Doctrine"
 
 [Capital]
 [Capital.Asset]
+[Capital.Connection]
 [Capital.Cultural]
 [Capital.Monetary]
 [Capital.Political]
@@ -46,8 +45,19 @@ target = "Capital"
 
 [Instrument]
 # Instruments generate rhythm. Axes, Guns, Microwave ovens, Pianos
+[Instrument.embodies]
+target = "Technology"
 
-[Instrument.Synth]
+[Instrument.Driving]
+[Instrument.Driving.Hammer]
+[Instrument.Driving.Hammer.embodies]
+target = "Technology.Metallurgy"
+[Instrument.Forming]
+[Instrument.Forming.Anvil]
+[Instrument.Forming.Anvil.embodies]
+target = "Technology.Metallurgy"
+[Instrument.Musical]
+[Instrument.Musical.Synthesiser]
 [Instrument.Text]
 [Instrument.Text.Code]
 
@@ -62,6 +72,12 @@ target = "Capital.Political"
 [Mythology.Credit]
 [Mythology.Credit.values]
 target = "Capital.Monetary"
+[Mythology.Family]
+[Mythology.Family.values]
+target = "Capital.Connection"
+[Mythology.Friendship]
+[Mythology.Friendship.values]
+target = "Capital.Connection"
 [Mythology.Nation]
 [Mythology.Nation.values]
 target = "Capital.Cultural"
@@ -103,6 +119,8 @@ target = "Performance"
 target = "Doctrine"
 [Performer.practices]
 target = "Instrument"
+[Performer.discovers]
+target = "Technology"
 [Performer.Heidegger]
 [Performer.Heidegger.formulates]
 target = "Doctrine.Breakdown"
@@ -112,10 +130,9 @@ target = "Performance.Thinking"
 [State]
 
 [Technology]
-[Technology.implements]
-target = "Instrument"
 
 [Technology.Audio]
+[Technology.Metallurgy]
 [Technology.Language]
 [Technology.Language.CSS]
 [Technology.Language.HTML]

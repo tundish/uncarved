@@ -416,7 +416,7 @@ def main(args):
     if args.cluster:
         writer = model.to_cluster(name=name, label=args.label, directed=args.digraph)
     else:
-        writer = model.to_dot(name=name, label=args.label, directed=args.digraph)
+        writer = model.to_dot(name=name, label=args.label, directed=args.digraph, strict=False)
     print("\n".join(writer), file=sys.stdout)
 
 
