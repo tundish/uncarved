@@ -1,11 +1,11 @@
 [Business]
 [Business.invokes]
 target = "Capital"
-[Business.acquires]
+[Business.adopts]
 target = "Technology"
 [Business.recruits]
 target = "Performer"
-[Business.adopts]
+[Business.promotes]
 target = "Doctrine"
 
 [Business.Church]
@@ -25,6 +25,8 @@ target = "Doctrine"
 [Doctrine.informs]
 target = "Performance"
 [Doctrine.Breakdown]
+
+[Doctrine.Design]
 
 [Gesture]
 [Gesture.hand]
@@ -119,6 +121,10 @@ target = "Instrument"
 [Technology.Language.HTML]
 [Technology.Language.PDF]
 [Technology.Language.Python]
+[Technology.Language.Python.Software]
+[Technology.Language.Python.Software.Balladeer]
+[Technology.Language.Python.Software.Docutils]
+[Technology.Language.Python.Software.Proclets]
 [Technology.Language.RestructuredText]
 [Technology.Language.TOML]
 [Technology.Network]

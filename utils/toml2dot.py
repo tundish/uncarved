@@ -1,4 +1,5 @@
 import argparse
+from collections import Counter
 from collections import namedtuple
 import dataclasses
 import functools
@@ -37,6 +38,9 @@ class Node:
     def __post_init__(self):
         self.label = self.label or self.name
 
+    @property
+    def rank(self):
+        return self.name.count(".")
 
 class Model:
 
@@ -201,7 +205,9 @@ class Model:
         for node in self.nodes.values():
             node_hash = hash(node)
             yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
-            for child in [self.nodes[i] for i in self.children(node.name)]:
+
+            ranks = sorted({self.nodes[i].rank for i in self.children(node.name)})
+            for child in [c for c in (self.nodes[i] for i in self.children(node.name)) if c.rank == ranks[0]]:
                 child_hash = hash(child)
                 yield f'{node_hash} {arc_style} {child_hash} [label="...", weight=1.00]'
 
@@ -354,6 +360,18 @@ class TestNode(unittest.TestCase):
         self.assertEqual(4, len(model.nodes))
         self.assertEqual(["A.B.C"], model.children("A"))
         self.assertEqual("C", model.nodes["C.B.C"].parent)
+
+    def test_node_rank(self):
+        text = """
+        [A]
+        [C.B.C]
+        [C]
+        [A.B.C]
+        """
+        model = Model.loads(text)
+        self.assertEqual(0, model.nodes["A"].rank)
+        self.assertEqual(2, model.nodes["A.B.C"].rank)
+        print(model.children("A"))
 
     def test_arc_labels(self):
         text = """
