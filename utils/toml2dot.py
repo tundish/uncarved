@@ -12,7 +12,8 @@ import unittest
 import toml
 
 """
-python -m utils.toml2dot --digraph mindmap.toml > mindmap.dot
+
+python -m utils.toml2dot --label "Taxonomy 3PCB MIDGETS" --digraph mindmap.toml > mindmap.dot
 dot -Tsvg mindmap.dot > mindmap.svg
 
 """
@@ -199,7 +200,7 @@ class Model:
         label = label or name
         arc_style = "->" if directed else "--"
 
-        yield f"{'strict ' if strict else ''}{'digraph' if directed else 'graph'} {name} {{"
+        yield f'{"strict " if strict else ""}{"digraph" if directed else "graph"} "{label}" {{'
         yield ""
 
         for node in self.nodes.values():
@@ -417,7 +418,8 @@ def main(args):
         writer = model.to_cluster(name=name, label=args.label, directed=args.digraph, strict=False)
     else:
         writer = model.to_dot(name=name, label=args.label, directed=args.digraph, strict=False)
-    print("\n".join(writer), file=sys.stdout)
+
+    print(*list(writer), sep="\n", file=sys.stdout)
 
 
 def parser():
