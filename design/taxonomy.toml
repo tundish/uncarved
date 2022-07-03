@@ -56,6 +56,8 @@ target = "Capital"
 [Instrument.embodies]
 target = "Technology"
 
+[Instrument.Conceptual]
+[Instrument.Conceptual.PetriNet]
 [Instrument.Driving]
 [Instrument.Driving.Hammer]
 [Instrument.Driving.Hammer.embodies]
