@@ -23,9 +23,16 @@ target = "Doctrine"
 [Doctrine]
 [Doctrine.informs]
 target = "Performance"
-[Doctrine.Breakdown]
 
 [Doctrine.Design]
+[Doctrine.Design.Game]
+[Doctrine.Design.Game.Audio]
+[Doctrine.Design.Game.Audio.Barks]
+[Doctrine.Design.Game.Mechanics]
+[Doctrine.Design.Game.Mechanics.Crafting]
+[Doctrine.Design.Game.Mechanics.DayNightCycle]
+[Doctrine.Philosophy]
+[Doctrine.Philosophy.Breakdown]
 
 [Gesture]
 [Gesture.hand]
@@ -123,7 +130,7 @@ target = "Instrument"
 target = "Technology"
 [Performer.Heidegger]
 [Performer.Heidegger.formulates]
-target = "Doctrine.Breakdown"
+target = "Doctrine.Philosophy.Breakdown"
 [Performer.Heidegger.begins]
 target = "Performance.Thinking"
 
@@ -151,6 +158,7 @@ target = "Instrument.Text"
 [Technology.Web]
 [Technology.Web.distributes]
 target = "Instrument.Text"
+[Technology.OS]
 [Technology.OS.Linux]
 [Technology.Video]
 
