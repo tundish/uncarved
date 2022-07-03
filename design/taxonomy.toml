@@ -39,7 +39,7 @@ target = "Performance"
 target = "Participant"
 [Gesture.head]
 target = "Performer"
-[Gesture.state]
+[Gesture.negotiates]
 target = "State"
 [Gesture.Speech]
 
