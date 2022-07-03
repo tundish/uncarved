@@ -12,7 +12,7 @@ import unittest
 import toml
 
 """
-python -m utils.toml2dot mindmap.toml > mindmap.dot
+python -m utils.toml2dot --digraph mindmap.toml > mindmap.dot
 dot -Tsvg mindmap.dot > mindmap.svg
 
 """
@@ -172,7 +172,7 @@ class Model:
                 yield ""
                 yield "}"
             elif self.children(node.name):
-                node_name = node.name.lower()
+                node_name = node.name.lower().replace(".", "_")
                 yield ""
                 yield f"subgraph cluster_{node_name} {{"
                 yield f'    label="{node.label}"'
@@ -414,7 +414,7 @@ def main(args):
 
     model = Model.loads(text)
     if args.cluster:
-        writer = model.to_cluster(name=name, label=args.label, directed=args.digraph)
+        writer = model.to_cluster(name=name, label=args.label, directed=args.digraph, strict=False)
     else:
         writer = model.to_dot(name=name, label=args.label, directed=args.digraph, strict=False)
     print("\n".join(writer), file=sys.stdout)

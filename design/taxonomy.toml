@@ -48,6 +48,7 @@ target = "State"
 target = "Capital"
 
 [Event.Broadcast]
+[Event.Story]
 [Event.Inspiration]
 
 [Instrument]
