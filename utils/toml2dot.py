@@ -57,6 +57,7 @@ class Node:
     def rank(self):
         return self.name.count(".")
 
+
 class Model:
 
     @classmethod
