@@ -72,7 +72,7 @@ label = "Inspiration"
 
 [Instrument]
 # Instruments generate rhythm. Axes, Guns, Microwave ovens, Pianos
-[Instrument.embodies]
+[Instrument.incorporates]
 target = "Technology"
 
 [Instrument.Conceptual]
@@ -80,15 +80,13 @@ label = "Concept"
 [Instrument.Conceptual.PetriNet]
 label = "Petri Nets"
 [Instrument.Driving]
-label = "Tools"
 [Instrument.Driving.Hammer]
-label = "Hammer"
+label = "hammer"
 [Instrument.Driving.Hammer.embodies]
 target = "Technology.Metallurgy"
 [Instrument.Forming]
-label = "Fixtures"
 [Instrument.Forming.Anvil]
-label = "Anvil"
+label = "anvil"
 [Instrument.Forming.Anvil.embodies]
 target = "Technology.Metallurgy"
 [Instrument.Musical]
@@ -152,10 +150,13 @@ target = "Event"
 [Performance.Reading.performs]
 target = "Instrument.Text"
 [Performance.Recital]
+label = "Recital"
 [Performance.Recital.pronounces]
 target = "Instrument.Text"
 [Performance.Thinking]
+label = "Thinking"
 [Performance.Writing]
+label = "Writing"
 [Performance.Writing.arranges]
 target = "Instrument.Text"
 
@@ -185,25 +186,43 @@ label = "state"
 
 [Technology.Audio]
 [Technology.Metallurgy]
+label="Metallurgy"
 [Technology.Language]
 [Technology.Language.CSS]
+label="CSS"
 [Technology.Language.HTML]
+label="HTML"
 [Technology.Language.PDF]
+label="PDF"
 [Technology.Language.Python]
+label="Python"
 [Technology.Language.Python.Software]
+[Technology.Language.Python.Software.comprises]
+target = "Instrument.Text.Code"
 [Technology.Language.Python.Software.Balladeer]
+label="balladeer"
 [Technology.Language.Python.Software.Docutils]
+label="docutils"
 [Technology.Language.Python.Software.Proclets]
+label="proclets"
+[Technology.Language.Python.Software.Proclets.implements]
+target = "Instrument.Conceptual.PetriNet"
 [Technology.Language.RestructuredText]
+label="rST"
 [Technology.Language.TOML]
+label="TOML"
 [Technology.Network]
+label="Network"
 [Technology.Printing]
+label="Printing"
 [Technology.Printing.reifies]
 target = "Instrument.Text"
 [Technology.Web]
 [Technology.Web.distributes]
 target = "Instrument.Text"
 [Technology.OS]
+label="OS"
 [Technology.OS.Linux]
+label="Linux"
 [Technology.Video]
 
