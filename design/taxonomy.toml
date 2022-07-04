@@ -23,6 +23,7 @@ target = "Doctrine"
 [Doctrine]
 [Doctrine.informs]
 target = "Performance"
+color = {"r" = 0, "g" = 0, "b" = 0}
 
 [Doctrine.Design]
 [Doctrine.Design.Game]

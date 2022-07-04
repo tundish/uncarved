@@ -18,10 +18,11 @@ dot -Tsvg mindmap.dot > mindmap.svg
 
 """
 
+RGBA = namedtuple("RGBA", ["r", "g", "b", "a"], defaults=(1.0,))
 Arc = namedtuple(
     "Arc",
-    ["label", "node", "target", "source", "weight"],
-    defaults=(None, 1.0)
+    ["label", "node", "target", "source", "weight", "color", "fill", "stroke"],
+    defaults=(None, 1.0, RGBA(0, 0, 255), RGBA(0, 255, 0), RGBA(255, 0, 0))
 )
 
 
@@ -35,6 +36,8 @@ class Node:
     arcs: list[Arc] = dataclasses.field(default_factory=list)
     data: dict = None
     parent: object = None
+    fill: RGBA = None
+    stroke: RGBA = None
 
     def __post_init__(self):
         self.label = self.label or self.name
@@ -111,11 +114,13 @@ class Model:
 
         for name, table in arcs.items():
             parent, dot, label = name.rpartition(".")
+            kwargs = {attr: RGBA(**table[attr]) for attr in ("color", "fill", "stroke") if attr in table}
             arc = Arc(
                 table.get("label", label),
                 node=parent or None,
                 target=table.get("target"),
-                weight=table.get("weight", 1.0)
+                weight=table.get("weight", 1.0),
+                **kwargs
             )
             try:
                 rv[parent].arcs.append(arc)
@@ -191,7 +196,12 @@ class Model:
                 target_hash = hash(self.nodes[arc.target])
                 yield (
                     f"{node_hash} {arc_style} {target_hash}"
-                    f' [label="{arc.label}", weight={arc.weight:.02f}]'
+                    f' ['
+                    f' label="{arc.label}", weight={arc.weight:.02f}'
+                    f' color="#{arc.stroke.r:02x}{arc.stroke.g:02x}{arc.stroke.b:02x}"'
+                    f' fontcolor="#{arc.color.r:02x}{arc.color.g:02x}{arc.color.b:02x}"'
+                    f' fillcolor="#{arc.fill.r:02x}{arc.fill.g:02x}{arc.fill.b:02x}"'
+                    f']'
                 )
         yield ""
         yield "}"
@@ -217,7 +227,12 @@ class Model:
                 target_hash = hash(self.nodes[arc.target])
                 yield (
                     f"{node_hash} {arc_style} {target_hash}"
-                    f' [label="{arc.label}", weight={arc.weight:.02f}]'
+                    f' ['
+                    f' label="{arc.label}", weight={arc.weight:.02f}'
+                    f' color="#{arc.stroke.r:02x}{arc.stroke.g:02x}{arc.stroke.b:02x}"'
+                    f' fontcolor="#{arc.color.r:02x}{arc.color.g:02x}{arc.color.b:02x}"'
+                    f' fillcolor="#{arc.fill.r:02x}{arc.fill.g:02x}{arc.fill.b:02x}"'
+                    f']'
                 )
             yield ""
 
