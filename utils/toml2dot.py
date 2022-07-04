@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# encoding: utf-8
+
 import argparse
 from collections import Counter
 from collections import namedtuple
@@ -13,9 +16,14 @@ import toml
 
 
 """
+This utility translates a graph defined in a TOML file to an equivalent .dot
 
-python -m utils.toml2dot --label "Taxonomy 3PCB MIDGETS" --digraph mindmap.toml > mindmap.dot
-dot -Tsvg mindmap.dot > mindmap.svg
+Usage:
+
+    python -m utils.toml2dot --label "Taxonomy 3PCB MIDGETS" --digraph \
+        design/taxonomy.toml > design/taxonomy.dot
+
+    dot -Tsvg design/taxonomy.dot > design/taxonomy.svg
 
 """
 
