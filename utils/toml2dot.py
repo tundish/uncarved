@@ -28,7 +28,7 @@ Usage:
 """
 
 
-RGBA = namedtuple("RGBA", ["r", "g", "b", "a"], defaults=(1.0,))
+RGBA = namedtuple("RGBA", ["r", "g", "b", "a"], defaults=(255,))
 Arc = namedtuple(
     "Arc",
     ["label", "node", "target", "source", "weight", "color", "fill", "stroke"],
@@ -203,7 +203,7 @@ class Model:
                     f"{node_hash}"
                     f' ['
                     f' label="{node.label}", weight={node.weight:.02f}'
-                    f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}"'
+                    f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}{node.stroke.a:02x}"'
                     f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}"'
                     f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}"'
                     f' ]'
@@ -241,9 +241,9 @@ class Model:
                 f"{node_hash}"
                 f' ['
                 f' label="{node.label}", weight={node.weight:.02f}'
-                f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}"'
-                f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}"'
-                f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}"'
+                f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}{node.stroke.a:02x}"'
+                f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}{node.color.a:02x}"'
+                f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}{node.fill.a:02x}"'
                 f' ]'
             )
 
@@ -254,9 +254,9 @@ class Model:
                     f"{node_hash} {arc_style} {child_hash}"
                     f' ['
                     f' label="...", weight={node.weight:.02f}'
-                    f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}"'
-                    f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}"'
-                    f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}"'
+                    f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}{node.stroke.a:02x}"'
+                    f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}{node.color.a:02x}"'
+                    f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}{node.fill.a:02x}"'
                     f' ]'
                 )
 
@@ -267,9 +267,9 @@ class Model:
                     f"{node_hash} {arc_style} {target_hash}"
                     f' ['
                     f' label="{arc.label}", weight={arc.weight:.02f}'
-                    f' color="#{arc.stroke.r:02x}{arc.stroke.g:02x}{arc.stroke.b:02x}"'
-                    f' fontcolor="#{arc.color.r:02x}{arc.color.g:02x}{arc.color.b:02x}"'
-                    f' fillcolor="#{arc.fill.r:02x}{arc.fill.g:02x}{arc.fill.b:02x}"'
+                    f' color="#{arc.stroke.r:02x}{arc.stroke.g:02x}{arc.stroke.b:02x}{arc.stroke.a:02x}"'
+                    f' fontcolor="#{arc.color.r:02x}{arc.color.g:02x}{arc.color.b:02x}{arc.color.a:02x}"'
+                    f' fillcolor="#{arc.fill.r:02x}{arc.fill.g:02x}{arc.fill.b:02x}{arc.fill.a:02x}"'
                     f' ]'
                 )
             yield ""
