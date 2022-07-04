@@ -7,10 +7,13 @@ target = "Performer"
 target = "Doctrine"
 
 [Business.Church]
+label = "Church"
 [Business.Corporation]
+label = "Corporation"
 [Business.Family]
-[Business.Gang]
+label = "Family"
 [Business.Government]
+label = "Government"
 
 [Capital]
 [Capital.Asset]
@@ -27,18 +30,24 @@ target = "Performance"
 color = {"r" = 0, "g" = 0, "b" = 0}
 
 [Doctrine.Design]
+label = "Design"
 [Doctrine.Design.Game]
+label = "Games"
 [Doctrine.Design.Game.Audio]
+label = "FX"
 [Doctrine.Design.Game.Audio.Barks]
 label = "barks"
 [Doctrine.Design.Game.Mechanics]
+label = "Mechanics"
 [Doctrine.Design.Game.Mechanics.Crafting]
+label = "crafting"
 [Doctrine.Design.Game.Mechanics.DayNightCycle]
+label = "day/night cycles"
 [Doctrine.Philosophy]
 [Doctrine.Philosophy.Breakdown]
 
 [Gesture]
-color = {"r" = 0, "g" = 255, "b" = 0}
+color = {"r" = 0, "g" = 0, "b" = 0}
 fill = {"r" = 0, "g" = 0, "b" = 0, "a" = 255}
 stroke = {"r" = 0, "g" = 0, "b" = 0, "a" = 255}
 [Gesture.hand]
@@ -47,15 +56,19 @@ target = "Participant"
 target = "Performer"
 [Gesture.negotiates]
 target = "State"
-[Gesture.Speech]
+[Gesture.Vocal]
+label = "speech"
 
 [Event]
 [Event.generates]
 target = "Capital"
 
 [Event.Broadcast]
+label = "Broadcast"
 [Event.Story]
+label = "Story"
 [Event.Inspiration]
+label = "Inspiration"
 
 [Instrument]
 # Instruments generate rhythm. Axes, Guns, Microwave ovens, Pianos
@@ -63,41 +76,58 @@ target = "Capital"
 target = "Technology"
 
 [Instrument.Conceptual]
+label = "Concept"
 [Instrument.Conceptual.PetriNet]
+label = "Petri Nets"
 [Instrument.Driving]
+label = "Tools"
 [Instrument.Driving.Hammer]
+label = "Hammer"
 [Instrument.Driving.Hammer.embodies]
 target = "Technology.Metallurgy"
 [Instrument.Forming]
+label = "Fixtures"
 [Instrument.Forming.Anvil]
+label = "Anvil"
 [Instrument.Forming.Anvil.embodies]
 target = "Technology.Metallurgy"
 [Instrument.Musical]
+label = "Sound"
 [Instrument.Musical.Synthesiser]
+label = "Synths"
 [Instrument.Text]
+label = "Text"
 [Instrument.Text.Code]
+label = "Code"
 
 [Mythology]
 
 [Mythology.Character]
+label = "Character"
 [Mythology.Character.values]
 target = "Capital.Social"
 [Mythology.Class]
+label = "Class"
 [Mythology.Class.values]
 target = "Capital.Political"
 [Mythology.Credit]
+label = "Credit"
 [Mythology.Credit.values]
 target = "Capital.Monetary"
 [Mythology.Family]
+label = "Ancestry"
 [Mythology.Family.values]
 target = "Capital.Connection"
 [Mythology.Friendship]
+label = "Friendship/Emnity"
 [Mythology.Friendship.values]
 target = "Capital.Connection"
 [Mythology.Nation]
+label = "Nationhood"
 [Mythology.Nation.values]
 target = "Capital.Cultural"
 [Mythology.Ownership]
+label = "Ownership"
 [Mythology.Ownership.values]
 target = "Capital.Asset"
 
@@ -108,6 +138,7 @@ target = "Mythology"
 target = "Event"
 
 [Participant.Heidegger]
+label = "Martin Heidegger"
 [Participant.Heidegger.experiences]
 target = "Event.Inspiration"
 
@@ -138,12 +169,17 @@ target = "Instrument"
 [Performer.discovers]
 target = "Technology"
 [Performer.Heidegger]
+label = "Martin Heidegger"
+[Performer.Heidegger.nexus]
+target = "Participant.Heidegger"
+label = "..."
 [Performer.Heidegger.formulates]
 target = "Doctrine.Philosophy.Breakdown"
 [Performer.Heidegger.begins]
 target = "Performance.Thinking"
 
 [State]
+label = "state"
 
 [Technology]
 
