@@ -21,6 +21,7 @@ target = "Doctrine"
 [Capital.Social]
 
 [Doctrine]
+color = {"r" = 0, "g" = 0, "b" = 0}
 [Doctrine.informs]
 target = "Performance"
 color = {"r" = 0, "g" = 0, "b" = 0}
@@ -29,6 +30,7 @@ color = {"r" = 0, "g" = 0, "b" = 0}
 [Doctrine.Design.Game]
 [Doctrine.Design.Game.Audio]
 [Doctrine.Design.Game.Audio.Barks]
+label = "barks"
 [Doctrine.Design.Game.Mechanics]
 [Doctrine.Design.Game.Mechanics.Crafting]
 [Doctrine.Design.Game.Mechanics.DayNightCycle]

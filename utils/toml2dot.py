@@ -11,6 +11,7 @@ import unittest
 
 import toml
 
+
 """
 
 python -m utils.toml2dot --label "Taxonomy 3PCB MIDGETS" --digraph mindmap.toml > mindmap.dot
@@ -18,11 +19,12 @@ dot -Tsvg mindmap.dot > mindmap.svg
 
 """
 
+
 RGBA = namedtuple("RGBA", ["r", "g", "b", "a"], defaults=(1.0,))
 Arc = namedtuple(
     "Arc",
     ["label", "node", "target", "source", "weight", "color", "fill", "stroke"],
-    defaults=(None, 1.0, RGBA(0, 0, 255), RGBA(0, 255, 0), RGBA(255, 0, 0))
+    defaults=(None, 1.0, RGBA(0, 0, 0), RGBA(0, 0, 0), RGBA(0, 0, 0))
 )
 
 
@@ -36,8 +38,9 @@ class Node:
     arcs: list[Arc] = dataclasses.field(default_factory=list)
     data: dict = None
     parent: object = None
-    fill: RGBA = None
-    stroke: RGBA = None
+    color: RGBA = RGBA(0, 0, 0)
+    fill: RGBA = RGBA(0, 0, 0)
+    stroke: RGBA = RGBA(0, 0, 0)
 
     def __post_init__(self):
         self.label = self.label or self.name
@@ -101,7 +104,9 @@ class Model:
                 arcs[name] = table
                 continue
 
-            node = Node(name, **{k: v for k, v in table.items() if k in fields})
+            colours = {attr: RGBA(**table[attr]) for attr in ("color", "fill", "stroke") if attr in table}
+            kwargs = dict({k: v for k, v in table.items() if k in fields}, **colours)
+            node = Node(name, **kwargs)
             node.data = table
             if "." in name:
                 paths = name.split(".")
@@ -186,7 +191,16 @@ class Model:
                 yield ""
             else:
                 node_hash = hash(node)
-                yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
+                yield (
+                    f"{node_hash}"
+                    f' ['
+                    f' label="{node.label}", weight={node.weight:.02f}'
+                    f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}"'
+                    f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}"'
+                    f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}"'
+                    f' ]'
+                )
+
 
         yield ""
 
@@ -201,7 +215,7 @@ class Model:
                     f' color="#{arc.stroke.r:02x}{arc.stroke.g:02x}{arc.stroke.b:02x}"'
                     f' fontcolor="#{arc.color.r:02x}{arc.color.g:02x}{arc.color.b:02x}"'
                     f' fillcolor="#{arc.fill.r:02x}{arc.fill.g:02x}{arc.fill.b:02x}"'
-                    f']'
+                    f' ]'
                 )
         yield ""
         yield "}"
@@ -215,12 +229,28 @@ class Model:
 
         for node in self.nodes.values():
             node_hash = hash(node)
-            yield f'{node_hash} [label="{node.label}", weight={node.weight:.02f}]'
+            yield (
+                f"{node_hash}"
+                f' ['
+                f' label="{node.label}", weight={node.weight:.02f}'
+                f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}"'
+                f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}"'
+                f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}"'
+                f' ]'
+            )
 
             ranks = sorted({self.nodes[i].rank for i in self.children(node.name)})
             for child in [c for c in (self.nodes[i] for i in self.children(node.name)) if c.rank == ranks[0]]:
                 child_hash = hash(child)
-                yield f'{node_hash} {arc_style} {child_hash} [label="...", weight=1.00]'
+                yield (
+                    f"{node_hash} {arc_style} {child_hash}"
+                    f' ['
+                    f' label="...", weight={node.weight:.02f}'
+                    f' color="#{node.stroke.r:02x}{node.stroke.g:02x}{node.stroke.b:02x}"'
+                    f' fontcolor="#{node.color.r:02x}{node.color.g:02x}{node.color.b:02x}"'
+                    f' fillcolor="#{node.fill.r:02x}{node.fill.g:02x}{node.fill.b:02x}"'
+                    f' ]'
+                )
 
 
             for arc in node.arcs:
@@ -232,7 +262,7 @@ class Model:
                     f' color="#{arc.stroke.r:02x}{arc.stroke.g:02x}{arc.stroke.b:02x}"'
                     f' fontcolor="#{arc.color.r:02x}{arc.color.g:02x}{arc.color.b:02x}"'
                     f' fillcolor="#{arc.fill.r:02x}{arc.fill.g:02x}{arc.fill.b:02x}"'
-                    f']'
+                    f' ]'
                 )
             yield ""
 
