@@ -20,7 +20,7 @@ This utility translates a graph defined in a TOML file to an equivalent .dot
 
 Usage:
 
-    python -m utils.toml2dot --label "Taxonomy 3PCB MIDGETS" --digraph \
+    python -m utils.toml2dot --label "Taxonomy MIDGET CABS 2P" --digraph \
         design/taxonomy.toml > design/taxonomy.dot
 
     dot -Tsvg design/taxonomy.dot > design/taxonomy.svg

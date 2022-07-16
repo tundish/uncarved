@@ -26,7 +26,7 @@ label = "Government"
 [Doctrine]
 color = {"r" = 0, "g" = 0, "b" = 0}
 [Doctrine.informs]
-target = "Performance"
+target = "Act"
 color = {"r" = 0, "g" = 0, "b" = 0}
 
 [Doctrine.Design]
@@ -140,29 +140,29 @@ label = "Martin Heidegger"
 [Participant.Heidegger.experiences]
 target = "Event.Inspiration"
 
-[Performance]
-# Performances span time
+[Act]
+# Acts span time
 
-[Performance.creates]
+[Act.creates]
 target = "Event"
 
-[Performance.Reading]
-[Performance.Reading.performs]
+[Act.Reading]
+[Act.Reading.vivifies]
 target = "Instrument.Text"
-[Performance.Recital]
+[Act.Recital]
 label = "Recital"
-[Performance.Recital.pronounces]
+[Act.Recital.pronounces]
 target = "Instrument.Text"
-[Performance.Thinking]
+[Act.Thinking]
 label = "Thinking"
-[Performance.Writing]
+[Act.Writing]
 label = "Writing"
-[Performance.Writing.arranges]
+[Act.Writing.arranges]
 target = "Instrument.Text"
 
 [Performer]
-[Performer.delivers]
-target = "Performance"
+[Performer.performs]
+target = "Act"
 [Performer.formulates]
 target = "Doctrine"
 [Performer.practices]
@@ -177,7 +177,7 @@ label = "..."
 [Performer.Heidegger.formulates]
 target = "Doctrine.Philosophy.Breakdown"
 [Performer.Heidegger.begins]
-target = "Performance.Thinking"
+target = "Act.Thinking"
 
 [State]
 label = "state"
