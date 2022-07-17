@@ -46,17 +46,18 @@ label = "day/night cycles"
 [Doctrine.Philosophy]
 [Doctrine.Philosophy.Breakdown]
 
-[Gesture]
+[Instrument.Conceptual.Gesture]
 color = {"r" = 0, "g" = 0, "b" = 0}
 fill = {"r" = 0, "g" = 0, "b" = 0, "a" = 255}
 stroke = {"r" = 0, "g" = 0, "b" = 0, "a" = 255}
-[Gesture.hand]
+label = "Gesture"
+[Instrument.Conceptual.Gesture.hand]
 target = "Participant"
-[Gesture.head]
+[Instrument.Conceptual.Gesture.head]
 target = "Performer"
-[Gesture.negotiates]
+[Instrument.Conceptual.Gesture.negotiates]
 target = "State"
-[Gesture.Vocal]
+[Instrument.Conceptual.Gesture.Vocal]
 label = "speech"
 
 [Event]
