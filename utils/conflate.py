@@ -33,6 +33,10 @@ class Conf(configparser.ConfigParser):
         interpolation = interpolation or configparser.ExtendedInterpolation()
         super().__init__(interpolation=interpolation, **kwargs)
 
+    @property
+    def sections(self):
+        return {k: v for k, v in self.items() if k != self.default_section}
+
 
 class TestLoad(unittest.TestCase):
 
