@@ -186,13 +186,11 @@ def main(args):
     else:
         if not args.input:
             text = sys.stdin.read()
-            name = ""
         else:
             text = args.input.read_text()
-            name = args.input.stem
 
-    writer = ()
-    print(*list(writer), sep="\n", file=sys.stdout)
+    conf = Conf.loads(text)
+    print(conf.dumps(), file=sys.stdout)
 
 
 def parser():
