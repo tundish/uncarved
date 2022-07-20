@@ -33,6 +33,7 @@ class Conf(configparser.ConfigParser):
         interpolation = interpolation or configparser.ExtendedInterpolation()
         super().__init__(interpolation=interpolation, **kwargs)
         self.SECTCRE = re.compile("\[\s*(?P<header>\S+)\s*\]")
+        self.optionxform = str
 
     @property
     def sections(self):
@@ -55,6 +56,14 @@ class Conf(configparser.ConfigParser):
 
 
 class TestConf(unittest.TestCase):
+
+    def test_case(self):
+        text = """
+        [section]
+        A = 1
+        """
+        conf = Conf.loads(text)
+        self.assertFalse("a" in conf["section"])
 
     def test_sections(self):
         text = """
