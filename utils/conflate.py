@@ -75,29 +75,30 @@ class TestLoad(unittest.TestCase):
         conf = Conf.loads(text)
         self.assertEqual({"tag": 1}, conf.sections["A.B.C"])
 
-    def test_graphs_unique(self):
+    def test_defaults(self):
         text = """
+        [DEFAULTS]
+        flavour = vanilla
         [A]
-        graphs = ["a", "b"]
         [B]
-        [C]
-        graphs = ["a"]
+        flavour = strawberry
         """
         conf = Conf.loads(text)
-        self.assertEqual({"a", "b"}, conf.graphs)
-        for i in ("A", "B", "C"):
-            with self.subTest(i=i):
-                self.assertFalse(conf.is_arc(conf.data[i]))
+        self.assertEqual("vanilla", conf.sections["A"].get("flavour"))
+        self.assertEqual("strawberry", conf.sections["B"].get("flavour"))
 
-    def test_graphs_sublevels(self):
+    def test_substitution(self):
         text = """
+        [DEFAULTS]
+        flavour = vanilla
         [A]
-        graphs = ["a"]
-        [A.B]
-        graphs = ["b"]
+        flavour = strawberry
+        [B]
+        flavour = ${A:flavour}
         """
         conf = Conf.loads(text)
-        self.assertEqual({"a", "b"}, conf.graphs)
+        self.assertEqual("strawberry", conf.sections["A"].get("flavour"))
+        self.assertEqual("strawberry", conf.sections["B"].get("flavour"))
 
     def test_loads(self):
         text = """
@@ -114,103 +115,6 @@ class TestLoad(unittest.TestCase):
         """
         conf = Conf.loads(text)
         self.assertIsInstance(conf, Conf)
-
-
-class TestNode(unittest.TestCase):
-
-    def test_node_defaults(self):
-        self.assertRaises(TypeError, Node)
-        node = Node(name="test node")
-        self.assertEqual("test node", node.label)
-        self.assertEqual(1, node.weight)
-        self.assertIsInstance(node.weight, float)
-        self.assertEqual([], node.arcs)
-        self.assertTrue(hash(node))
-
-    def test_node_parent_root(self):
-        text = """
-        [A]
-        [B]
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(2, len(conf.nodes))
-        self.assertEqual("A", conf.nodes["A"].label)
-        self.assertTrue(all(i.parent is None for i in conf.nodes.values()))
-        self.assertTrue(all(isinstance(i.data, dict) for i in conf.nodes.values()))
-
-    def test_node_parent_tree(self):
-        text = """
-        [A]
-        [A.B]
-        [C]
-        [C.B]
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(4, len(conf.nodes))
-        self.assertEqual("A", conf.nodes["A"].label)
-        self.assertEqual("A", conf.nodes["A.B"].parent)
-        self.assertEqual("C", conf.nodes["C.B"].parent)
-
-    def test_node_parent_gap(self):
-        text = """
-        [A]
-        [C.B.C]
-        [C]
-        [A.B.C]
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(4, len(conf.nodes))
-        self.assertEqual("A", conf.nodes["A.B.C"].parent)
-        self.assertEqual("C", conf.nodes["C.B.C"].parent)
-
-    def test_node_children(self):
-        text = """
-        [A]
-        [C.B.C]
-        [C]
-        [A.B.C]
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(4, len(conf.nodes))
-        self.assertEqual(["A.B.C"], conf.children("A"))
-        self.assertEqual("C", conf.nodes["C.B.C"].parent)
-
-    def test_node_rank(self):
-        text = """
-        [A]
-        [C.B.C]
-        [C]
-        [A.B.C]
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(0, conf.nodes["A"].rank)
-        self.assertEqual(2, conf.nodes["A.B.C"].rank)
-        print(conf.children("A"))
-
-    def test_arc_labels(self):
-        text = """
-        [A.B]
-        [A.B.c]
-        target = "C"
-        [C]
-        [C.ab]
-        target = "A.B"
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(2, len(conf.nodes))
-        self.assertEqual(1, len(conf.nodes["A.B"].arcs))
-        self.assertEqual(1, len(conf.nodes["C"].arcs))
-
-    def test_node_to_dot(self):
-        text = """
-        [A]
-        [C.B.C]
-        [C]
-        [A.B.C]
-        """
-        conf = Conf.loads(text)
-        self.assertEqual(4, len(conf.nodes))
-        self.assertEqual("C", conf.nodes["C.B.C"].parent)
 
 
 def main(args):
