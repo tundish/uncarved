@@ -40,12 +40,18 @@ class Conf(configparser.ConfigParser):
     def sections(self):
         return {k: v for k, v in self.items() if k != self.default_section}
 
-    def dumps(self):
-        buf = io.StringIO()
-        self.write(buf)
-        return buf.getvalue()
+    @property
+    def literals(self):
+        d = self.defaults()
+        return {k: dict(d, **s) for k, s in self.sections.items()}
 
-class TestLoad(unittest.TestCase):
+    def dumps(self):
+        rv = [f"{k} = {v}" for l, s in self.literals.items() for k, v in s.items()]
+        print(rv)
+        return "\n".join(rv)
+
+
+class TestConf(unittest.TestCase):
 
     def test_sections(self):
         text = """
@@ -96,7 +102,7 @@ class TestLoad(unittest.TestCase):
 
     def test_substitution(self):
         text = """
-        [DEFAULTS]
+        [DEFAULT]
         flavour = vanilla
         [A]
         flavour = strawberry
@@ -115,6 +121,18 @@ class TestLoad(unittest.TestCase):
         conf = Conf.loads(text)
         self.assertIsInstance(conf, Conf)
 
+    def test_literals(self):
+        text = """
+        [DEFAULT]
+        flavour = vanilla
+        [A]
+        flavour = strawberry
+        [B]
+        flavour = ${A:flavour}
+        """
+        conf = Conf.loads(text)
+        print(conf.literals)
+
     def test_dumps_simple(self):
         text = """
         [A]
@@ -123,6 +141,19 @@ class TestLoad(unittest.TestCase):
         conf = Conf.loads(text)
         rv = conf.dumps()
         self.assertEqual("[A]\n\n[B]\n\n", rv)
+
+    def test_dumps_substitution(self):
+        text = """
+        [DEFAULT]
+        flavour = vanilla
+        [A]
+        flavour = strawberry
+        [B]
+        flavour = ${A:flavour}
+        """
+        conf = Conf.loads(text)
+        rv = conf.dumps()
+        self.assertNotIn("$", rv)
 
 
 def main(args):
