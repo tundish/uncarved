@@ -3,6 +3,7 @@
 
 import argparse
 import configparser
+import io
 import pathlib
 import re
 import sys
@@ -39,6 +40,10 @@ class Conf(configparser.ConfigParser):
     def sections(self):
         return {k: v for k, v in self.items() if k != self.default_section}
 
+    def dumps(self):
+        buf = io.StringIO()
+        self.write(buf)
+        return buf.getvalue()
 
 class TestLoad(unittest.TestCase):
 
@@ -67,7 +72,7 @@ class TestLoad(unittest.TestCase):
         """
         conf = Conf.loads(text)
         self.assertEqual("1", conf.sections["A"].get("tag"))
-        self.assertEqual({"tag": 2}, conf.sections["A.B.C"])
+        self.assertEqual({"tag": "2"}, dict(conf.sections["A.B.C"]))
 
     def test_get(self):
         text = """
@@ -75,11 +80,11 @@ class TestLoad(unittest.TestCase):
         tag = 1
         """
         conf = Conf.loads(text)
-        self.assertEqual({"tag": 1}, conf.sections["A.B.C"])
+        self.assertEqual({"tag": "1"}, dict(conf.sections["A.B.C"]))
 
     def test_defaults(self):
         text = """
-        [DEFAULTS]
+        [DEFAULT]
         flavour = vanilla
         [A]
         [B]
@@ -110,13 +115,14 @@ class TestLoad(unittest.TestCase):
         conf = Conf.loads(text)
         self.assertIsInstance(conf, Conf)
 
-    def test_dumps(self):
+    def test_dumps_simple(self):
         text = """
         [A]
         [B]
         """
         conf = Conf.loads(text)
-        self.assertIsInstance(conf, Conf)
+        rv = conf.dumps()
+        self.assertEqual("[A]\n\n[B]\n\n", rv)
 
 
 def main(args):
