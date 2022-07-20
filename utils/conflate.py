@@ -4,6 +4,7 @@
 import argparse
 import configparser
 import pathlib
+import re
 import sys
 from textwrap import dedent
 import unittest
@@ -32,6 +33,7 @@ class Conf(configparser.ConfigParser):
     def __init__(self, *args, interpolation=None, **kwargs):
         interpolation = interpolation or configparser.ExtendedInterpolation()
         super().__init__(interpolation=interpolation, **kwargs)
+        self.SECTCRE = re.compile("\[\s*(?P<header>\S+)\s*\]")
 
     @property
     def sections(self):
@@ -64,7 +66,7 @@ class TestLoad(unittest.TestCase):
         [  D ]
         """
         conf = Conf.loads(text)
-        self.assertEqual(1, conf.sections["A"].get("tag"))
+        self.assertEqual("1", conf.sections["A"].get("tag"))
         self.assertEqual({"tag": 2}, conf.sections["A.B.C"])
 
     def test_get(self):
