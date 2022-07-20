@@ -3,23 +3,21 @@
 
 import argparse
 import configparser
-import io
+import itertools
 import pathlib
 import re
 import sys
-from textwrap import dedent
 import unittest
 
 
 """
-This utility translates a graph defined in a TOML file to an equivalent .dot
+This utility applies configparser substitution patterns as a preprocessor
+for, eg: TOML files.
 
 Usage:
 
-    python -m utils.toml2dot --label "Taxonomy MIDGET CABS 2P" --digraph \
-        design/taxonomy.toml > design/taxonomy.dot
-
-    dot -Tsvg design/taxonomy.dot > design/taxonomy.svg
+    python -m utils.confuser design/taxonomy.toml | \
+    python -m utils.toml2dot > design/taxonomy.dot
 
 """
 
@@ -46,9 +44,14 @@ class Conf(configparser.ConfigParser):
         return {k: dict(d, **s) for k, s in self.sections.items()}
 
     def dumps(self):
-        rv = [f"{k} = {v}" for l, s in self.literals.items() for k, v in s.items()]
-        print(rv)
-        return "\n".join(rv)
+        rv = [
+            itertools.chain(
+                (f"[{l}]",),
+                (f"{k} = {v}" for k, v in s.items())
+            )
+            for l, s in self.literals.items()
+        ]
+        return "\n".join(j for i in rv for j in i)
 
 
 class TestConf(unittest.TestCase):
@@ -131,7 +134,6 @@ class TestConf(unittest.TestCase):
         flavour = ${A:flavour}
         """
         conf = Conf.loads(text)
-        print(conf.literals)
 
     def test_dumps_simple(self):
         text = """
@@ -140,7 +142,7 @@ class TestConf(unittest.TestCase):
         """
         conf = Conf.loads(text)
         rv = conf.dumps()
-        self.assertEqual("[A]\n\n[B]\n\n", rv)
+        self.assertEqual("[A]\n[B]", rv)
 
     def test_dumps_substitution(self):
         text = """
@@ -154,6 +156,17 @@ class TestConf(unittest.TestCase):
         conf = Conf.loads(text)
         rv = conf.dumps()
         self.assertNotIn("$", rv)
+
+    def test_dumps_quotes(self):
+        text = """
+        [A]
+        label = "day/night cycles"
+        [B]
+        color = {"r" = 0, "g" = 0, "b" = 0}
+        """
+        conf = Conf.loads(text)
+        rv = conf.dumps()
+        self.assertEqual(8, rv.count('"'))
 
 
 def main(args):
